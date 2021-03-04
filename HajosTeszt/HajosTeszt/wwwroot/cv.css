@@ -35,6 +35,7 @@ dt {
 img {
     display: block;
     margin: auto;
+    width: 100%;
 }
 
 h3 {

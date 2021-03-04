@@ -21,6 +21,7 @@ table {
 
 td {
     padding: 2%;
+    width: 50%;
 }
 
 dl {
@@ -35,7 +36,7 @@ dt {
 img {
     display: block;
     margin: auto;
-    width: 60%;
+    width: 100%;
 }
 
 h3 {

@@ -2,8 +2,9 @@
 <HTML lang="hu">
 <head>
     <meta charset="utf-8">
-    <title>Hajó</title>
+    <title>Hajós vizsga</title>
     <link rel="stylesheet" href="hajo.css">
+    <script src="/hetedik.js"></script>
 </head>
 <body>
     <div id="külső">
@@ -12,17 +13,17 @@
         </div>
         <div id="középső">
             <div id="válaszok">
-                <div id="válasz1" class="válasz1 kattintható">Válasz 1</div>
-                <div id="válasz2" class="válasz2 kattintható jó">Válasz 2</div>
-                <div id="válasz3" class="válasz3 kattintható rossz">Válasz 3</div>
+                <div id="válasz1" onclick="válasz(1)" class="válasz kattintható">Válasz 1</div>
+                <div id="válasz2" onclick="válasz(2)" class="válasz kattintható">Válasz 2</div>
+                <div id="válasz3" onclick="válasz(3)" class="válasz kattintható">Válasz 3</div>
             </div>
             <div id="kép">
                 <img id="kép1" src="https://szoft1.comeback.hu/hajo/teszt-0050.jpg"/>
             </div>
         </div>
         <div id="vezérlő">
-            <div class="gomb kattintható">Vissza</div>
-            <div class="gomb kattintható">Előre</div>
+            <div class="gomb kattintható" id="vissza">Vissza</div>
+            <div class="gomb kattintható" id="előre">Előre</div>
         </div>
     </div>
 </body>

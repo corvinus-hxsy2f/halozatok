@@ -20,7 +20,6 @@
     }
 
     letöltés();
-
 }
 
 
@@ -42,6 +41,11 @@ function letöltésBefejeződött(data) {
   
 }
 
+fetch('/questions/1')
+    .then(response => response.json())
+    .then(data => kérdésMegjelenítés(data)
+    );
+
 function kérdésMegjelenítés(kérdésSzáma) {
     let kérdés_szöveg = document.getElementById("kérdés_szöveg");
     let kép = document.getElementById("kép1");
@@ -60,6 +64,19 @@ function kérdésMegjelenítés(kérdésSzáma) {
     válasz3.classList.remove("jó", "rossz")
 }
 
+function kérdésBetöltés(id) {
+    fetch(`/questions/${id}`)
+        .then(response => {
+            if (!response.ok) {
+                console.error(`Hibás válasz: ${response.status}`)
+            }
+            else {
+                return response.json()
+            }
+        })
+        .then(data => kérdésMegjelenítés(data));
+}    
+
 válasz = function (n) {
     if (kérdések[kérdésSorszám].correctAnswer == n) {
         document.getElementById("válasz" + n).classList.add("jó");
@@ -71,6 +88,6 @@ válasz = function (n) {
     }
 }
 
-
+      
 
 

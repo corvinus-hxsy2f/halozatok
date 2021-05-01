@@ -1,37 +1,31 @@
 ﻿window.onload = function () {
 
-    document.getElementById("vissza").onclick = function Vissza() {
-        kérdésSorszám--;
-        if (kérdésSorszám < 0) {
-            kérdésSorszám = kérdések.length - 1;
-        }
-        kérdésMegjelenítés(kérdésSorszám)
-    }
+    console.log("Oldal betöltve...");
+    fetch("questions/count").then(x => x.text()).then(x => { sz = parseInt(x) })
 
-    document.getElementById("előre").onclick = function Előre() {
+    document.getElementById("előre").onclick = function előre() {
         kérdésSorszám++;
-        if (kérdésSorszám == kérdések.length - 1) {
-            kérdésSorszám = 0;
-
+        if (kérdésSorszám == sz + 1) {
+            kérdésSorszám = 1;
         }
-        kérdésMegjelenítés(kérdésSorszám);
-
-
+        kérdésBetöltés(kérdésSorszám);
     }
+    document.getElementById("vissza").onclick = function vissza() {
+        kérdésSorszám--;
+        if (kérdésSorszám < 1) {
+            kérdésSorszám = sz;
+        }
+        kérdésBetöltés(kérdésSorszám);
+    }
+    kérdésBetöltés(kérdésSorszám);
 
-    letöltés();
+
 }
 
+var sz;
+var kérdésSorszám = 1;
+var jóVálasz;
 
-var kérdések;
-var kérdésSorszám = 0;
-
-function letöltés() {
-    fetch('questions.json')
-        .then(response => response.json())
-        .then(data => letöltésBefejeződött(data)
-    );
-}
 
 function letöltésBefejeződött(data) {
     console.log("Sikeres letöltés")
@@ -41,52 +35,59 @@ function letöltésBefejeződött(data) {
   
 }
 
-fetch('/questions/1')
-    .then(response => response.json())
-    .then(data => kérdésMegjelenítés(data)
-    );
-
-function kérdésMegjelenítés(kérdésSzáma) {
-    let kérdés_szöveg = document.getElementById("kérdés_szöveg");
-    let kép = document.getElementById("kép1");
-    let válasz1 = document.getElementById("válasz1");
-    let válasz2 = document.getElementById("válasz2");
-    let válasz3 = document.getElementById("válasz3");
-
-    kérdés_szöveg.innerHTML = kérdések[kérdésSzáma].questionText
-    kép.src = "https://szoft1.comeback.hu/hajo/" + kérdések[kérdésSzáma].image
-    válasz1.innerText = kérdések[kérdésSzáma].answer1
-    válasz2.innerText = kérdések[kérdésSzáma].answer2
-    válasz3.innerText = kérdések[kérdésSzáma].answer3
-
-    válasz1.classList.remove("jó", "rossz")
-    válasz2.classList.remove("jó", "rossz")
-    válasz3.classList.remove("jó", "rossz")
-}
-
 function kérdésBetöltés(id) {
     fetch(`/questions/${id}`)
         .then(response => {
             if (!response.ok) {
                 console.error(`Hibás válasz: ${response.status}`)
+                return null;
             }
             else {
                 return response.json()
             }
         })
-        .then(data => kérdésMegjelenítés(data));
-}    
+        .then(data => {
+            if (data)kérdésMegjelenítés(data)
+        });
+} 
+
+
+function kérdésMegjelenítés(kérdésSorszám) {
+
+    if (!kérdésSorszám) return;
+    console.log(kérdésSorszám);
+
+    kérdés_szöveg.innerText = kérdésSorszám.questionText
+    kép.src = "https://szoft1.comeback.hu/hajo/" + kérdésSorszám.image
+    válasz1.innerText = kérdésSorszám.answer1
+    válasz2.innerText = kérdésSorszám.answer2
+    válasz3.innerText = kérdésSorszám.answer3
+    jóVálasz = kérdésSorszám.correctAnswer
+
+    if (kérdésSorszám.image) {
+        document.getElementById("kép").src = "https://szoft1.comeback.hu/hajo/" + kérdésSzáma.image;
+        document.getElementById("kép").classList.remove("rejtett")
+    }
+    else {
+        document.getElementById("kép").classList.add("rejtett")
+    } 
+
+    válasz1.classList.remove("jó", "rossz")
+    válasz2.classList.remove("jó", "rossz")
+    válasz3.classList.remove("jó", "rossz")
+}   
 
 válasz = function (n) {
-    if (kérdések[kérdésSorszám].correctAnswer == n) {
+    if (jóVálasz == n) {
         document.getElementById("válasz" + n).classList.add("jó");
     }
     else {
         document.getElementById("válasz" + n).classList.add("rossz");
-        /*(kérdések[kérdésSorszám].correctAnswer).classList.add("jó");*/
-
     }
 }
+
+
+
 
       
 

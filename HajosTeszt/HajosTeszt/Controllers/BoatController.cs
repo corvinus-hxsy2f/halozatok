@@ -17,7 +17,7 @@ namespace HajosTeszt.Controllers
         public ActionResult M1()
         {
             HajostesztContext context = new HajostesztContext();
-            var kérdések = from x in context.Questions 
+            var kérdések = from x in context.Questions
                            select x.QuestionText;
 
             return new JsonResult(kérdések);
@@ -35,6 +35,16 @@ namespace HajosTeszt.Controllers
             if (kérdés == null) return BadRequest("Nincs ilyen sorszámú kérdés");
 
             return new JsonResult(kérdés);
+        }
+
+        [HttpGet]
+        [Route("questions/count")]
+        public int M3()
+        {
+            HajostesztContext context = new HajostesztContext();
+            var kérdés = context.Questions.Count();
+
+            return kérdés;
         }
     }
 }

@@ -4,7 +4,7 @@
     fetch("questions/count").then(x => x.text()).then(x => { sz = parseInt(x) })
 
     document.getElementById("előre").onclick = function előre() {
-        
+        clearTimeout(timerHandler);
         displayedQuestion++;
         if (displayedQuestion == questionsInHotList) displayedQuestion = 0;
         kérdésMegjelenítés();
@@ -29,7 +29,7 @@ var questionsInHotList = 7;
 var displayedQuestion;      //A hotList-ből éppen ez a kérdés van kint
 var numberOfQuestions;      //Kérdések száma a teljes adatbázisban
 var nextQuestion = 1;       //A következő kérdés száma a teljes listában
-
+var timerHandler;
 
 function letöltésBefejeződött(data) {
     console.log("Sikeres letöltés")
@@ -46,6 +46,18 @@ function init() {
             goodAnswers: 0
         }
         hotList[i] = q;
+
+        if (localStorage.getItem("hotList", JSON.stringify(hotList))) {
+            hotList = JSON.parse(localStorage.getItem("hotList"));
+        }
+
+        if (localStorage.getItem("displayedQuestion", displayedQuestion)) {
+            displayedQuestion = parseInt(localStorage.getItem("displayedQuestion"));
+        }
+
+        if (localStorage.getItem("nextQuestion", nextQuestion)) {
+            nextQuestion = parseInt(localStorage.getItem("nextQuestion"));
+        }
     }
 
     //Első kérdések letöltése
@@ -103,15 +115,32 @@ function kérdésMegjelenítés() {
     válasz1.classList.remove("jó", "rossz")
     válasz2.classList.remove("jó", "rossz")
     válasz3.classList.remove("jó", "rossz")
+
+    document.getElementById("válaszok").style.pointerEvents = "auto";
 }
+
+
 
 válasz = function (n) {
     if (jóVálasz == n) {
         document.getElementById("válasz" + n).classList.add("jó");
+        hotList[displayedQuestion].goodAnswers++;
+        if (hotList[displayedQuestion].goodAnswers===3) {
+            kérdésBetöltés(nextQuestion, displayedQuestion);
+            nextQuestion++;
+        }
     }
     else {
         document.getElementById("válasz" + n).classList.add("rossz");
+        hotList[displayedQuestion].goodAnswers = 0;
     }
+
+    document.getElementById("válaszok").style.pointerEvents = "none";
+    timerHandler = setTimeout(előre, 3000);
+
+    localStorage.setItem("hotList", JSON.stringify(hotList));
+    localStorage.setItem("displayedQuestion", displayedQuestion);
+    localStorage.setItem("nextQuestion", nextQuestion);
 }
 
 
